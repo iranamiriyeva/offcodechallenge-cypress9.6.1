@@ -1,0 +1,25 @@
+{
+  "name": "offcodechallenge9.6.1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx cypress open",
+    "test": "npx cypress run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": false,
+    "stepDefinitions": "cypress/integration"
+  },
+  "devDependencies": {
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "cypress-mailosaur": "^2.11.0",
+    "cypress-xpath": "^2.0.1"
+  },
+  "dependencies": {
+    "cypress": "^9.6.1"
+  }
+}

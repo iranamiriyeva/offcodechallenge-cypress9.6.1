@@ -1,0 +1,21 @@
+{
+    "testFiles": "**/*.{feature,features}",
+    "chromeWebSecurity": false,
+    "defaultCommandTimeout": 10000, 
+    "viewportWidth": 1280,
+    "viewportHeight": 720,
+    "requestTimeout": 90000,
+    "responseTimeout": 90000,
+    "timeout": 90000,
+    "pageLoadTimeout": 120000,
+    "redirectionLimit": 10,
+    "retryOnStatusCodeFailure": true,
+    "retryOnNetworkFailure": true,
+    "env": {
+        "baseUrl": "https://www.deinbett.de",
+        "email": "irana.miriyeva@gmail.com",
+        "password": "Si123456!",
+        "MAILOSAUR_API_KEY": "H8GjQZSFalwRP4TI",
+        "MAILOSAUR_SERVER": "jtpfoarq"
+    }
+}
