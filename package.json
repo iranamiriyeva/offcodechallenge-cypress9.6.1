@@ -4,20 +4,33 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx cypress open",
-    "test": "npx cypress run"
+    "start": "npx cypress run --spec \"cypress/integration/**/*\" --browser chrome --env allure=true",
+    "report": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "clear": "if exist allure-results rmdir /q /s allure-results && if exist allure-report rmdir /q /s allure-report && if exist cypress\\screenshots rmdir /q /s cypress\\screenshots && if exist cypress\\videos rmdir /q /s cypress\\videos && if exist cypress\\cucumber-json rmdir /q /s cypress\\cucumber-json",
+    "pretest": "npm run clear",
+    "test": "npm run start || npm run posttest",
+    "posttest": "npm run report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "cypress-cucumber-preprocessor": {
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": "cypress/cucumber-json",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    },
     "nonGlobalStepDefinitions": false,
     "stepDefinitions": "cypress/integration"
   },
   "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.28.5",
+    "allure-commandline": "^2.18.1",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-mailosaur": "^2.11.0",
-    "cypress-xpath": "^2.0.1"
+    "cypress-xpath": "^2.0.1",
+    "mocha-allure-reporter": "^1.4.0"
   },
   "dependencies": {
     "cypress": "^9.6.1"

@@ -16,6 +16,10 @@
         "email": "irana.miriyeva@gmail.com",
         "password": "Si123456!",
         "MAILOSAUR_API_KEY": "H8GjQZSFalwRP4TI",
-        "MAILOSAUR_SERVER": "jtpfoarq"
+        "MAILOSAUR_SERVER": "jtpfoarq",
+        "allureLogCypress": true,
+        "allureLogGherkin": true,
+        "allureAttachRequests": true,
+        "allureAddVideoOnPass": true
     }
 }

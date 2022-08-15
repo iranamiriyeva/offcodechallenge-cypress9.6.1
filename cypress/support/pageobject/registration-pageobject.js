@@ -122,6 +122,7 @@ export const setNewPassword = (resetPassword) => {
 //Get EmailId from Mailosaur inbox
 export function getEmailId(receivedAfter, serverId) {
   let emailId;
+  let counter = 0;
 
   cy.request({
     method: 'GET',
@@ -141,7 +142,6 @@ export function getEmailId(receivedAfter, serverId) {
       const responseObject = JSON.parse(response);
       console.log(responseObject); 
 
-      let counter = 0;
       while(counter <= 6) {
         if (responseObject.body.items.length == 0) {
           cy.wait(15000); getEmailId(receivedAfter, serverId); 
@@ -155,3 +155,4 @@ export function getEmailId(receivedAfter, serverId) {
 
     return emailId;
 }
+

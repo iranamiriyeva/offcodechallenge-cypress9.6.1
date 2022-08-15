@@ -9,14 +9,14 @@ Background:
 Given User is on the Home page
 
     @registration
-    # Create a user account with random generated data and use the registration function to register an account for this user
+    #1 Create a user account with random generated data and use the registration function to register an account for this user
     Scenario: As a user I should be able to create a new account
         And navigates to the Registration page
         When User submits the registration form with random data
         Then User should be authenticated and sent to the Home page
     
     @resetPassword
-    # Use the forgot password function to request a password reset and change it then to a new one
+    #2 Use the forgot password function to request a password reset and change it then to a new one
     Scenario: As a user I should be able to request a password reset
         And navigates to the Login page
         When User makes a Password Reset request for the existing account
@@ -26,7 +26,7 @@ Given User is on the Home page
         Then User should be authenticated and sent to the Customer Data page     
 
     @login
-    # Login with the created user in Scenario 1 (and the new password, which was defined in 1-b)
+    #3 Login with the created user in Scenario 1 (and the new password, which was defined in 1-b)
     Scenario: As a user I should be able to login to my account using the new credentials
         And navigates to the Login page
         And Welcome back heading is displayed
@@ -34,10 +34,10 @@ Given User is on the Home page
         Then User is authenticated and sent to the Home page 
 
     @login
-    # Login with the user credentials in Scenario 1 but using the old password
+    #4 Login with the user credentials in Scenario 1 but using the old password
     Scenario: As a user I should unable to login to my account using the old credentials
-    And navigates to the Login page
-    And Welcome back heading is displayed
-    When User enters the old credentials 
-    Then Error message is displayed to the user
-    But unable to login to the account    
+        And navigates to the Login page
+        And Welcome back heading is displayed
+        When User enters the old credentials 
+        Then Error message is displayed to the user
+        But unable to login to the account    
