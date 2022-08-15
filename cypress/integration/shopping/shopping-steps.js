@@ -1,5 +1,5 @@
 import {Given, When, And, Then} from 'cypress-cucumber-preprocessor/steps';
-import {addProductToWishlist, verifyWishlistProducts, addProductToBasket} from '../../support/pageobject/shopping-pageobject';
+import {navigateMenu, wishlistLink, addToWishlist, verifyWishlistItems, addToBasket, basketHeader} from '../../support/pageobject/shopping-pageobject';
 
 //Global Variables
 let productData;
@@ -17,46 +17,36 @@ beforeEach(() => {
     );
 });
 
-/*after(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-});*/
-
 // ******************************************************************************************
 //SCENARIO-1 | Add products to Wishlist
 Given('User navigates to the Menu list', () => {
-    cy.get('.menu__entry a.menu__linkHref')
-    .invoke('attr', 'href')
-    .then(href => {
-      cy.visit(Cypress.env('baseUrl')+href);
-    });
-
-    cy.login(Cypress.env('email'), Cypress.env('password'));
+  navigateMenu();
+  cy.login(Cypress.env('email'), Cypress.env('password'));
 });
 
 When('Chooses {int} random items by clicking on the wishlist icon', (quantity) => {  
-  productData = addProductToWishlist(quantity); 
+  productData = addToWishlist(quantity); 
 }); 
 
 Then('The list of items are added to the Wishlist', () => {
-  verifyWishlistProducts(productData[0]);
+  verifyWishlistItems(productData[0]);
 });
 
 // ******************************************************************************************
-//SCENARIO-2 | Add all 5 existing items to Basket
+//SCENARIO-2 | Add all 5 existing items to the Basket
 Given('User navigates to the Wishlist page', () => {
    cy.login(Cypress.env('email'), Cypress.env('password'));   
-   cy.get('.headerElement--wishlist a').click({force: true});
+   cy.get(wishlistLink).click({force: true});
    cy.url().should('include', 'wunschliste');
 });
 
 When('Clicks on Add to basket button', () => {
-  addProductToBasket(productData[1]);
+  addToBasket(productData[1]);
 });
 
 Then ('A message is displayed about successful item addition', () => {
   cy.go('forward');
   cy.wait(3000);
-  cy.get('.headline').should('have.text', 'Dein Warenkorb');
-  cy.get('.cartEntries__deliveryTypeSubHeader').contains('Einmalig pro Bestellung');
+  cy.get(basketHeader).should('have.text', 'Dein Warenkorb');
 });
+

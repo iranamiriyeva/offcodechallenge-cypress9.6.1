@@ -4,15 +4,16 @@ import {loginHeaderLink, loginEmail, loginPassword, submitLogin, cookieSettingsP
 // ******************************************************************************************
 //To confirm Cookies popup
 Cypress.Commands.add('confirmCookies', () => {
-if (cy.contains(cookieSettingsPopup)) {
-    cy.contains(confirmAllCookies).click();
-}
-  }); 
+  cy.get('body').then($body => {
+    if ($body.find('.consentForm__root').length === 1) {
+      cy.contains(confirmAllCookies).click();
+    }
+    })
+}); 
 
 // ******************************************************************************************
 //Login method
 Cypress.Commands.add('login', (email, password) => {
-    //cy.visit(Cypress.env('baseUrl') +'/login'); 
     cy.get(loginHeaderLink).click();
     cy.get(loginEmail).type(email);
     cy.get(loginPassword).type(password);

@@ -1,6 +1,6 @@
 // ******************************************************************************************
 //Selectors
-export const cookieSettingsPopup = 'Cookie-Einstellungen';
+export const cookieSettingsPopup = '.consentForm__root';
 export const confirmAllCookies = 'Alle auswählen & bestätigen';
 export const firstName = '#firstName';
 export const lastName = '#lastName';
@@ -119,10 +119,10 @@ export const setNewPassword = (resetPassword) => {
 }
 
 // ******************************************************************************************
-//Get EmailId from Mailosaur inbox
+//Get Email from Mailosaur inbox
 export function getEmailId(receivedAfter, serverId) {
   let emailId;
-  let counter = 0;
+  let passwordResetLink;
 
   cy.request({
     method: 'GET',
@@ -142,17 +142,35 @@ export function getEmailId(receivedAfter, serverId) {
       const responseObject = JSON.parse(response);
       console.log(responseObject); 
 
-      while(counter <= 6) {
-        if (responseObject.body.items.length == 0) {
-          cy.wait(15000); getEmailId(receivedAfter, serverId); 
-          counter++;     
+      if (responseObject.body.items.length == 0) {
+          cy.wait(15000);           
+          getEmailId(receivedAfter, serverId);                
         } else {
           console.log(responseObject.body.items[0].id);
-          emailId = `${responseObject.body.items[0].id}`;      
-        }    
-      }      
+          emailId = `${responseObject.body.items[0].id}`;   
+          cy.log(emailId);
+          console.log(emailId);   
+        }          
 });
 
-    return emailId;
+    cy.request({
+      method: 'GET',
+      url: `https://mailosaur.com/api/messages/${emailId}`, 
+        auth: {
+        username: Cypress.env('MAILOSAUR_API_KEY'),
+        password: ''
+      },
+      headers: {
+        authorization: `Basic ${Cypress.env('MAILOSAUR_API_KEY')}`
+      } 
+    }).then(response => {
+        passwordResetLink = response.body.html.links[5];
+        console.log(response);
+        console.log(response.body.html.links[5]);
+        console.log(passwordResetLink);    
+        //expect(response.body.subject).to.equal('Passwort zurücksetzen');   
+      });
+  
+  return passwordResetLink;
 }
 

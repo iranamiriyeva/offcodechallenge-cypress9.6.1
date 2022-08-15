@@ -8,7 +8,6 @@ const lastName = randomString(8);
 const testEmail = randomEmail(8, `@${serverId}.mailosaur.net`);
 const beforeResetPassword = randomPassword(8);
 const resetPassword = randomPassword(8);
-let emailId;
 let newDate = new Date();
 let receivedAfter = newDate.toISOString();
 let passwordResetLink;
@@ -52,33 +51,12 @@ When('User makes a Password Reset request for the existing account', () => {
 });
 
 Then('User gets a Password Reset email', () => {
-  /*cy.mailosaurGetMessage(serverId, {
-    sentTo: testEmail
-  }).
-  then((email) => {   
+  cy.mailosaurGetMessage(serverId, {sentTo: testEmail}, {receivedAfter: receivedAfter})
+  .then((email) => {   
     expect(email.subject).to.equal('Passwort zurücksetzen');    
-    passwordResetLink = email.html.links[0].href;
-  });*/
-  emailId = getEmailId(receivedAfter, serverId);    
-    
-    cy.request({
-      method: 'GET',
-      url: `https://mailosaur.com/api/messages/${emailId}`, 
-        auth: {
-        username: Cypress.env('MAILOSAUR_API_KEY'),
-        password: ''
-      },
-      headers: {
-        authorization: `Basic ${Cypress.env('MAILOSAUR_API_KEY')}`
-      } 
-    }).then(response => {
-        passwordResetLink = response.body.html.links[5];
-        console.log(response);
-        console.log(response.body.html.links[5]);
-        console.log(passwordResetLink);
-        
-        //expect(response.body.subject).to.equal('Passwort zurücksetzen');   
-      });
+    passwordResetLink = email.text.links[0].href;
+  });
+  //passwordResetLink = getEmailId(receivedAfter, serverId);    
    });
 
 And('follows the link from the email', () => {
@@ -93,7 +71,7 @@ And('types the new password', () => {
 Then('User should be authenticated and sent to the Customer Data page',  () => {
     cy.url().should('include', 'kundenkonto');
     cy.contains('Deine Kundendaten');
-    cy.mailosaurDeleteAllMessages(serverId); //reset email box
+    //cy.mailosaurDeleteAllMessages(serverId); //reset email box
   }
 );
 

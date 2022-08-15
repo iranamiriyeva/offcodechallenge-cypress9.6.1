@@ -1,20 +1,30 @@
 // ******************************************************************************************
 //Selectors
+export const navMenu = '.menu__entry a.menu__linkHref';
 export const productList = '.articleTile__content';
 export const wishlistIcon = '.wishlistIcon--pointer';
 export const productIdAttr = 'data-wish-list-entry-number';
-export const productNameInfo = '.articleTile__info'; 
 export const productTitle = 'span.articleInfo__name';
-export const selectProductName = '//span[normalize-space()=';
-//productPrice //span[normalize-space()='Baron']/ancestor::div//descendant::div[@class='articlePrice__integer']
-//productButtonspan[normalize-space()='Baron']/ancestor::div//descendant::div[@class='wishlistEntry__deliveryAddToCart wishlistEntry__deliveryAddToCart--logistics']//button[@id='add-to-cart-logistic']
 export const wishlistEntry = 'data-wishlist-entry-id';
 export const addToCardButton = '#articlePresentationAddToCart';
+export const wishlistLink = '.headerElement--wishlist a';
+export const basketHeader = '.headline--cart';
 
 // ******************************************************************************************
 //Methods
-//To add random products within required quantity
-export const addProductToWishlist = (quantity) => {
+// ******************************************************************************************
+//To navigate to menu
+export const navigateMenu = () => {
+  cy.get(navMenu)
+  .invoke('attr', 'href')
+  .then(href => {
+    cy.visit(Cypress.env('baseUrl')+href);
+  });
+}
+
+// ******************************************************************************************
+//To add random products within required quantity to the Wishlist
+export const addToWishlist = (quantity) => {
   cy.intercept({method: 'PUT', url: '*/wishlist/*'}).as('productAddition');  
   let itemCount = '';
   let randomProduct = ''; 
@@ -33,12 +43,10 @@ export const addProductToWishlist = (quantity) => {
        
         cy.get(productList).find(wishlistIcon).eq(randomProduct).invoke('attr', productIdAttr).then(value => {
           productId.push(value);
-          console.log(productId);
           cy.log(productId);  
 
         cy.get(`a[href*="${value}"] ${productTitle}`).then(element => {                 
             productName.push(element.text());
-            console.log(productName);
             cy.log(productName);
         });
 
@@ -46,22 +54,21 @@ export const addProductToWishlist = (quantity) => {
       }        
   }); 
   productData.push(productName, productId);
-  console.log(productData);
   cy.log(productData);
   return productData;
 }
 
 // ******************************************************************************************
 //To verify addition of products to the Wishlist
-export const verifyWishlistProducts = (products) => {
-    cy.get('.headerElement__link--wishlist').click();
+export const verifyWishlistItems = (products) => {
+    cy.get(wishlistLink).click();
     cy.url().should('include', 'wunschliste');
-    products.forEach(product => cy.contains(product, { matchCase: true }, { timeout: 12000 }));
+    products.forEach(product => cy.contains(product, { matchCase: true }, { timeout: 15000 }));
 }
 
 // ******************************************************************************************
-//To add wishlisted products to Basket
-export const addProductToBasket = (productIDs) => {
+//To add wishlisted products to the Basket
+export const addToBasket = (productIDs) => {
     for(let i = 0; i <= productIDs.length-1; i ++) {
         cy.get(`[${wishlistEntry}="${productIDs[i]}"] `+addToCardButton).click();
         cy.contains('Zum Warenkorb').click();   
